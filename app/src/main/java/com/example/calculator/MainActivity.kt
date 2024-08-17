@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity() {
 
     val myFormatter = DecimalFormat("#####.#####")
 
+    var history : String = ""
+    var currentResult : String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -75,6 +78,10 @@ class MainActivity : AppCompatActivity() {
         }
         mainBinding.btnDivide.setOnClickListener {
 
+            history = mainBinding.textViewHistory.text.toString()
+            currentResult = mainBinding.textViewResult.text.toString()
+            mainBinding.textViewHistory.text = history.plus(currentResult).plus("/")
+
             if (operator) {
                 when (status) {
 
@@ -93,6 +100,10 @@ class MainActivity : AppCompatActivity() {
 
         }
         mainBinding.btnMulti.setOnClickListener {
+
+            history = mainBinding.textViewHistory.text.toString()
+            currentResult = mainBinding.textViewResult.text.toString()
+            mainBinding.textViewHistory.text = history.plus(currentResult).plus("*")
 
             if (operator) {
                 when (status) {
@@ -113,6 +124,10 @@ class MainActivity : AppCompatActivity() {
         }
         mainBinding.btnMinus.setOnClickListener {
 
+            history = mainBinding.textViewHistory.text.toString()
+            currentResult = mainBinding.textViewResult.text.toString()
+            mainBinding.textViewHistory.text = history.plus(currentResult).plus("-")
+
             if (operator) {
                 when (status) {
 
@@ -131,6 +146,10 @@ class MainActivity : AppCompatActivity() {
 
         }
         mainBinding.btnPlus.setOnClickListener {
+
+            history = mainBinding.textViewHistory.text.toString()
+            currentResult = mainBinding.textViewResult.text.toString()
+            mainBinding.textViewHistory.text = history.plus(currentResult).plus("+")
 
             if (operator) {
                 when (status) {
@@ -151,6 +170,9 @@ class MainActivity : AppCompatActivity() {
         }
         mainBinding.btnEquals.setOnClickListener {
 
+            history = mainBinding.textViewHistory.text.toString()
+            currentResult = mainBinding.textViewResult.text.toString()
+
             if (operator) {
                 when (status) {
 
@@ -161,12 +183,22 @@ class MainActivity : AppCompatActivity() {
                     else -> firstNumber = mainBinding.textViewResult.text.toString().toDouble()
 
                 }
+
+                mainBinding.textViewHistory.text = history.plus(currentResult).plus("=").plus(mainBinding.textViewResult.text.toString())
             }
 
             operator = false
 
         }
         mainBinding.btnDot.setOnClickListener {
+
+            number = if (number == null) {
+                "0."
+            } else {
+                "$number."
+            }
+
+            mainBinding.textViewResult.text = number
 
         }
 
