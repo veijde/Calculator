@@ -1,20 +1,64 @@
 package com.example.calculator
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.calculator.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var mainBinding: ActivityMainBinding
+    var number : String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        mainBinding = ActivityMainBinding.inflate(layoutInflater)
+        val view = mainBinding.root
+        setContentView(view)
+
+        mainBinding.textViewResult.text = "0"
+
+        mainBinding.btnZero.setOnClickListener {
+            onNumberCLicked("0")
         }
+        mainBinding.btnOne.setOnClickListener {
+            onNumberCLicked("1")
+        }
+        mainBinding.btnTwo.setOnClickListener {
+            onNumberCLicked("2")
+        }
+        mainBinding.btnThree.setOnClickListener {
+            onNumberCLicked("3")
+        }
+        mainBinding.btnFour.setOnClickListener {
+            onNumberCLicked("4")
+        }
+        mainBinding.btnFive.setOnClickListener {
+            onNumberCLicked("5")
+        }
+        mainBinding.btnSix.setOnClickListener {
+            onNumberCLicked("6")
+        }
+        mainBinding.btnSeven.setOnClickListener {
+            onNumberCLicked("7")
+        }
+        mainBinding.btnEight.setOnClickListener {
+            onNumberCLicked("8")
+        }
+        mainBinding.btnNine.setOnClickListener {
+            onNumberCLicked("9")
+        }
+
+    }
+
+    fun onNumberCLicked(clickedNumber : String) {
+
+        if (number == null) {
+            number = clickedNumber
+        } else {
+            number += clickedNumber
+        }
+
+        mainBinding.textViewResult.text = number
+
     }
 }
