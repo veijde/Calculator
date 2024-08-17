@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     var history : String = ""
     var currentResult : String = ""
 
+    var dotControl : Boolean = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -70,8 +72,13 @@ class MainActivity : AppCompatActivity() {
 
             number?.let {
 
-                number = it.substring(0, it.length - 1)
-                mainBinding.textViewResult.text = number
+                if (it.length == 1) {
+                    onButtonACClicked()
+                } else {
+                    number = it.substring(0, it.length - 1)
+                    mainBinding.textViewResult.text = number
+                    dotControl = !number!!.contains(".")
+                }
 
             }
 
@@ -97,6 +104,7 @@ class MainActivity : AppCompatActivity() {
             status = "division"
             operator = false
             number = null
+            dotControl = true
 
         }
         mainBinding.btnMulti.setOnClickListener {
@@ -120,6 +128,7 @@ class MainActivity : AppCompatActivity() {
             status = "multiplication"
             operator = false
             number = null
+            dotControl = true
 
         }
         mainBinding.btnMinus.setOnClickListener {
@@ -143,6 +152,7 @@ class MainActivity : AppCompatActivity() {
             status = "subtraction"
             operator = false
             number = null
+            dotControl = true
 
         }
         mainBinding.btnPlus.setOnClickListener {
@@ -166,6 +176,7 @@ class MainActivity : AppCompatActivity() {
             status = "addition"
             operator = false
             number = null
+            dotControl = true
 
         }
         mainBinding.btnEquals.setOnClickListener {
@@ -185,21 +196,25 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 mainBinding.textViewHistory.text = history.plus(currentResult).plus("=").plus(mainBinding.textViewResult.text.toString())
+
             }
 
             operator = false
+            dotControl = true
 
         }
         mainBinding.btnDot.setOnClickListener {
 
-            number = if (number == null) {
-                "0."
-            } else {
-                "$number."
+            if (dotControl) {
+                number = if (number == null) {
+                    "0."
+                } else {
+                    "$number."
+                }
+                mainBinding.textViewResult.text = number
             }
 
-            mainBinding.textViewResult.text = number
-
+            dotControl = false
         }
 
     }
@@ -212,6 +227,7 @@ class MainActivity : AppCompatActivity() {
         mainBinding.textViewHistory.text = ""
         firstNumber = 0.0
         lastNumber = 0.0
+        dotControl = true
 
     }
 
