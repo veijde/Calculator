@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     var currentResult : String = ""
 
     var dotControl : Boolean = true
+    var buttonEqualsControl : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -201,13 +202,19 @@ class MainActivity : AppCompatActivity() {
 
             operator = false
             dotControl = true
-
+            buttonEqualsControl = true
         }
         mainBinding.btnDot.setOnClickListener {
 
             if (dotControl) {
                 number = if (number == null) {
                     "0."
+                } else if (buttonEqualsControl) {
+                    if (mainBinding.textViewResult.text.toString().contains(".")) {
+                        mainBinding.textViewResult.text.toString()
+                    } else {
+                        mainBinding.textViewResult.text.toString().plus(".")
+                    }
                 } else {
                     "$number."
                 }
@@ -228,6 +235,7 @@ class MainActivity : AppCompatActivity() {
         firstNumber = 0.0
         lastNumber = 0.0
         dotControl = true
+        buttonEqualsControl = false
 
     }
 
@@ -235,6 +243,16 @@ class MainActivity : AppCompatActivity() {
 
         if (number == null) {
             number = clickedNumber
+        } else if (buttonEqualsControl) {
+            number = if (dotControl) {
+                clickedNumber
+            } else {
+                mainBinding.textViewResult.text.toString().plus(clickedNumber)
+            }
+            firstNumber = number!!.toDouble()
+            lastNumber = 0.0
+            status = null
+            mainBinding.textViewHistory.text = ""
         } else {
             number += clickedNumber
         }
@@ -242,6 +260,7 @@ class MainActivity : AppCompatActivity() {
         mainBinding.textViewResult.text = number
 
         operator = true
+        buttonEqualsControl = false
 
     }
 
