@@ -41,7 +41,6 @@ class ChangeThemeActivity : AppCompatActivity() {
             editor.apply()
 
         }
-
     }
 
     override fun onResume() {

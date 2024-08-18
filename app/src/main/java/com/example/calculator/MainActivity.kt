@@ -1,10 +1,13 @@
 package com.example.calculator
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.icu.text.DecimalFormat
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.calculator.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +28,8 @@ class MainActivity : AppCompatActivity() {
 
     var dotControl : Boolean = true
     var buttonEqualsControl : Boolean = false
+
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -315,6 +320,66 @@ class MainActivity : AppCompatActivity() {
             firstNumber /= lastNumber
             mainBinding.textViewResult.text = myFormatter.format(firstNumber)
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        sharedPreferences = this.getSharedPreferences("darkTheme", Context.MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean("switch", false)
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        sharedPreferences = this.getSharedPreferences("calculations", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        val resultToSave = mainBinding.textViewResult.text.toString()
+        val historyToSave = mainBinding.textViewHistory.text.toString()
+        val numberToSave = number
+        val statusToSave = status
+        val operatorToSave = operator
+        val dotToSave = dotControl
+        val equalToSave = buttonEqualsControl
+        val firstNumberToSave = firstNumber.toString()
+        val lastNumberToSave = lastNumber.toString()
+
+        editor.putString("result", resultToSave)
+        editor.putString("history", historyToSave)
+        editor.putString("number", numberToSave)
+        editor.putString("status", statusToSave)
+        editor.putBoolean("operator", operatorToSave)
+        editor.putBoolean("dot", dotToSave)
+        editor.putBoolean("equal", equalToSave)
+        editor.putString("first", firstNumberToSave)
+        editor.putString("last", lastNumberToSave)
+
+        editor.apply()
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        sharedPreferences = this.getSharedPreferences("calculations", Context.MODE_PRIVATE)
+
+        mainBinding.textViewResult.text = sharedPreferences.getString("result", "0")
+        mainBinding.textViewHistory.text = sharedPreferences.getString("history", "")
+
+        number = sharedPreferences.getString("number", null)
+        status = sharedPreferences.getString("status", null)
+        operator = sharedPreferences.getBoolean("operator", false)
+        dotControl = sharedPreferences.getBoolean("dot", true)
+        buttonEqualsControl = sharedPreferences.getBoolean("equal", false)
+        firstNumber = sharedPreferences.getString("first", "0.0")!!.toDouble()
+        lastNumber = sharedPreferences.getString("last", "0.0")!!.toDouble()
 
     }
 
